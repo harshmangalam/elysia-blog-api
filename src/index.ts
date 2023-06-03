@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { prisma } from "./lib/prisma";
+import { prisma } from "./libs";
 import { auth } from "./modules";
 const prismaPlugin = (app: Elysia) => app.state("prisma", prisma);
 
