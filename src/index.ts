@@ -1,15 +1,11 @@
-import { Elysia } from "elysia";
+import Elysia from "elysia";
 import { prisma } from "./lib/prisma";
-import { signupHandler, loginHandler } from "./handlers";
+import { auth } from "./modules";
+const prismaPlugin = (app: Elysia) => app.state("prisma", prisma);
 
-const app = new Elysia();
-app
-  .use((app) => app.state("prisma", prisma))
-  .group("/api", (app) =>
-    app.group("/auth", (app) =>
-      app.post("/signup", signupHandler).post("/login", loginHandler)
-    )
-  )
+const app = new Elysia()
+  .use(prismaPlugin)
+  .group("/api", (app) => app.use(auth))
   .listen(8080);
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
