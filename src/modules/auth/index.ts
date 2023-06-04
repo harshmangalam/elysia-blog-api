@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { prisma } from "~libs";
 import { comparePassword, hashPassword, md5hash } from "~utils";
 import { jwt } from "@elysiajs/jwt";
+import { cookie } from "@elysiajs/cookie";
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
     app
@@ -82,13 +83,13 @@ export const auth = (app: Elysia) =>
       .use(
         jwt({
           secret: "itssecret",
-          exp: "1h",
           name: "jwt",
         })
       )
+      .use(cookie())
       .post(
         "/login",
-        async ({ body, set }) => {
+        async ({ body, set, jwt, setCookie }) => {
           const { username, password } = body;
           // verify email/username
           const user = await prisma.user.findFirst({
@@ -130,6 +131,27 @@ export const auth = (app: Elysia) =>
           }
 
           // generate access and refresh token
+
+          const accessToken = await jwt.sign({
+            userId: user.id,
+          });
+          const refreshToken = await jwt.sign({
+            userId: user.id,
+          });
+          setCookie("accessToken", accessToken, {
+            maxAge: 15 * 60, // 15 minutes
+            path: "/",
+          });
+          setCookie("refreshToken", refreshToken, {
+            maxAge: 86400 * 7, // 7 days
+            path: "/",
+          });
+
+          return {
+            success: true,
+            data: null,
+            message: "Account login successfully",
+          };
         },
         {
           body: t.Object({
