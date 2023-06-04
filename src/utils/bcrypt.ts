@@ -1,12 +1,14 @@
-import { randomBytes, pbkdf2 } from "node:crypto";
-async function hashPassword(password: string): Promise<string> {
+import { randomBytes, pbkdf2, createHash } from "node:crypto";
+async function hashPassword(
+  password: string
+): Promise<{ hash: string; salt: string }> {
   const salt = randomBytes(16).toString("hex");
   return new Promise((resolve, reject) => {
     pbkdf2(password, salt, 1000, 64, "sha512", (error, derivedKey) => {
       if (error) {
         return reject(error);
       }
-      return resolve(derivedKey.toString("hex"));
+      return resolve({ hash: derivedKey.toString("hex"), salt });
     });
   });
 }
@@ -26,4 +28,8 @@ async function comparePassword(
   });
 }
 
-export { hashPassword, comparePassword };
+async function md5hash(text: string) {
+  return createHash("md5").update(text).digest("hex");
+}
+
+export { hashPassword, comparePassword, md5hash };

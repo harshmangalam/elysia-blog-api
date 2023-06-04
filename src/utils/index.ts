@@ -1,1 +1,1 @@
-export * from "./password";
+export * from "./bcrypt";
