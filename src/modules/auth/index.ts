@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "~libs";
+import { hashPassword } from "~utils";
 
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
@@ -44,6 +45,9 @@ export const auth = (app: Elysia) =>
               message: "Someone already taken this username.",
             };
           }
+
+          // handle password
+          const encryptedPassword = await hashPassword();
         },
         {
           body: t.Object({
