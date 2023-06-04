@@ -1,11 +1,26 @@
 import Elysia, { t } from "elysia";
+import { isAuthenticated } from "~middlewares";
+import { prisma } from "~libs";
 
 export const articles = (app: Elysia) =>
   app.group("/articles", (app) =>
-    app.post(
+    app.use(isAuthenticated).post(
       "/",
-      async ({ body }) => {
-        return body;
+      async ({ body, user }) => {
+        const article = await prisma.article.create({
+          data: {
+            authorId: user!.id,
+            ...body,
+          },
+        });
+
+        return {
+          success: true,
+          message: "Article created",
+          data: {
+            article,
+          },
+        };
       },
       {
         body: t.Object({
