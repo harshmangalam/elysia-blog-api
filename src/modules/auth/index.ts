@@ -1,8 +1,6 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "~libs";
 import { comparePassword, hashPassword, md5hash } from "~utils";
-import { jwt } from "@elysiajs/jwt";
-import { cookie } from "@elysiajs/cookie";
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
     app
@@ -80,15 +78,9 @@ export const auth = (app: Elysia) =>
           }),
         }
       )
-      .use(
-        jwt({
-          secret: "itssecret",
-          name: "jwt",
-        })
-      )
-      .use(cookie())
       .post(
         "/login",
+        // @ts-ignore
         async ({ body, set, jwt, setCookie }) => {
           const { username, password } = body;
           // verify email/username

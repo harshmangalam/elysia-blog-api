@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import { prisma } from "~libs";
 
 export const isAuthenticated = (app: Elysia) =>
+  // @ts-ignore
   app.derive(async ({ cookie, jwt, set }) => {
     console.log(cookie);
     if (!cookie!.access_token) {
