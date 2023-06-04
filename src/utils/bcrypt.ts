@@ -28,7 +28,7 @@ async function comparePassword(
   });
 }
 
-async function md5hash(text: string) {
+function md5hash(text: string) {
   return createHash("md5").update(text).digest("hex");
 }
 
