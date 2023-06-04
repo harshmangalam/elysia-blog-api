@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "~libs";
-import { hashPassword } from "~utils";
+import { hashPassword, md5hash } from "~utils";
 
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
@@ -47,7 +47,28 @@ export const auth = (app: Elysia) =>
           }
 
           // handle password
-          const encryptedPassword = await hashPassword(password);
+          const { hash, salt } = await hashPassword(password);
+          const emailHash = md5hash(email);
+          const profileImage = `https://www.gravatar.com/avatar/${emailHash}?d=identicon`;
+
+          const newUser = await prisma.user.create({
+            data: {
+              name,
+              email,
+              hash,
+              salt,
+              username,
+              profileImage,
+            },
+          });
+
+          return {
+            success: true,
+            message: "Account created",
+            data: {
+              user: newUser,
+            },
+          };
         },
         {
           body: t.Object({
