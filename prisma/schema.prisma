@@ -17,7 +17,7 @@ model User {
   email        String   @unique
   salt         String
   hash         String
-  summary      String
+  summary      String?
   links        Json?
   location     Json?
   profileImage String
