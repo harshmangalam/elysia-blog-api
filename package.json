@@ -6,6 +6,7 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/jwt": "^0.5.0",
     "@prisma/client": "^4.15.0",
     "elysia": "latest"
   },
