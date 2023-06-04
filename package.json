@@ -11,6 +11,7 @@
     "elysia": "latest"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "bun-types": "latest"
   },
   "module": "src/index.js"
