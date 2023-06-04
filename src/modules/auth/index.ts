@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "~libs";
 import { comparePassword, hashPassword, md5hash } from "~utils";
-
+import { jwt } from "@elysiajs/jwt";
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
     app
@@ -79,6 +79,13 @@ export const auth = (app: Elysia) =>
           }),
         }
       )
+      .use(
+        jwt({
+          secret: "itssecret",
+          exp: "1h",
+          name: "jwt",
+        })
+      )
       .post(
         "/login",
         async ({ body, set }) => {
@@ -121,6 +128,8 @@ export const auth = (app: Elysia) =>
               message: "Invalid credentials",
             };
           }
+
+          // generate access and refresh token
         },
         {
           body: t.Object({
