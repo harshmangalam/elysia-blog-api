@@ -47,7 +47,7 @@ export const auth = (app: Elysia) =>
           }
 
           // handle password
-          const encryptedPassword = await hashPassword();
+          const encryptedPassword = await hashPassword(password);
         },
         {
           body: t.Object({

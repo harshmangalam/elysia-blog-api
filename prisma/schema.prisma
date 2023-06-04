@@ -15,7 +15,8 @@ model User {
   name         String
   username     String   @unique
   email        String   @unique
-  password     String
+  salt         String
+  hash         String
   summary      String
   links        Json?
   location     Json?
