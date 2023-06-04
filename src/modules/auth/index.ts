@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "~libs";
-import { hashPassword, md5hash } from "~utils";
+import { comparePassword, hashPassword, md5hash } from "~utils";
 
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
@@ -79,7 +79,54 @@ export const auth = (app: Elysia) =>
           }),
         }
       )
-      .post("/login", () => {
-        return "Login";
-      })
+      .post(
+        "/login",
+        async ({ body, set }) => {
+          const { username, password } = body;
+          // verify email/username
+          const user = await prisma.user.findFirst({
+            where: {
+              OR: [
+                {
+                  email: username,
+                },
+                {
+                  username,
+                },
+              ],
+            },
+            select: {
+              id: true,
+              hash: true,
+              salt: true,
+            },
+          });
+
+          if (!user) {
+            set.status = 400;
+            return {
+              success: false,
+              data: null,
+              message: "Invalid credentials",
+            };
+          }
+
+          // verify password
+          const match = await comparePassword(password, user.salt, user.hash);
+          if (!match) {
+            set.status = 400;
+            return {
+              success: false,
+              data: null,
+              message: "Invalid credentials",
+            };
+          }
+        },
+        {
+          body: t.Object({
+            username: t.String(),
+            password: t.String(),
+          }),
+        }
+      )
   );
