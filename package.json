@@ -7,11 +7,9 @@
   },
   "dependencies": {
     "@prisma/client": "^4.15.0",
-    "bcrypt": "^5.1.0",
     "elysia": "latest"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
     "bun-types": "latest"
   },
   "module": "src/index.js"
