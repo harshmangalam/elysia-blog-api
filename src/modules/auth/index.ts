@@ -138,11 +138,11 @@ export const auth = (app: Elysia) =>
           const refreshToken = await jwt.sign({
             userId: user.id,
           });
-          setCookie("accessToken", accessToken, {
+          setCookie("access_token", accessToken, {
             maxAge: 15 * 60, // 15 minutes
             path: "/",
           });
-          setCookie("refreshToken", refreshToken, {
+          setCookie("refresh_token", refreshToken, {
             maxAge: 86400 * 7, // 7 days
             path: "/",
           });
