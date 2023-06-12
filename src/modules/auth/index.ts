@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
-import { prisma } from "~libs";
-import { comparePassword, hashPassword, md5hash } from "~utils";
-import { isAuthenticated } from "../../middlewares/auth";
+import { prisma } from "~libs/prisma";
+import { comparePassword, hashPassword, md5hash } from "~utils/bcrypt";
+import { isAuthenticated } from "~middlewares/auth";
 export const auth = (app: Elysia) =>
   app.group("/auth", (app) =>
     app
@@ -154,6 +154,7 @@ export const auth = (app: Elysia) =>
         }
       )
       .use(isAuthenticated)
+      // protected route
       .get("/me", ({ user }) => {
         return {
           success: true,

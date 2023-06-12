@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia";
-import { isAuthenticated } from "~middlewares";
-import { prisma } from "~libs";
+import { isAuthenticated } from "~middlewares/auth";
+import { prisma } from "~libs/prisma";
 
 export const articles = (app: Elysia) =>
   app.group("/articles", (app) =>
